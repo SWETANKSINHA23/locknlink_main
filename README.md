@@ -6,17 +6,17 @@
 
 > Enterprise-grade URL shortener with JWT authentication, real-time analytics, and modern DevOps practices.
 
-## ✨ Features
+## Features
 
-- 🔗 URL shortening with custom aliases
-- 🔐 JWT-based authentication
-- 📊 Real-time click analytics
-- 🔒 Password-protected URLs
-- 📱 Responsive design
-- 🐳 Docker support
-- ✅ Comprehensive testing (80%+ coverage)
+- URL shortening with custom aliases
+- JWT-based authentication
+- Real-time click analytics
+- Password-protected URLs
+- Responsive design
+- Docker support
+- Comprehensive testing (80%+ coverage)
 
-## 🛠 Tech Stack
+## Tech Stack
 
 **Frontend:** React 18, TypeScript, Vite  
 **Backend:** Node.js 18, Express, MongoDB  
@@ -24,7 +24,38 @@
 **Testing:** Jest, Vitest, Playwright  
 **Monitoring:** Prometheus, Grafana
 
-## 🚀 Quick Start
+## Database Schema
+
+```mermaid
+erDiagram
+    User ||--o{ URL : creates
+    
+    User {
+        ObjectId _id PK
+        string email UK
+        string password
+        date createdAt
+        date updatedAt
+    }
+    
+    URL {
+        ObjectId _id PK
+        string originalUrl
+        string shortUrl UK
+        ObjectId userId FK
+        number clicks
+        boolean isPasswordProtected
+        string password
+        number passwordAttempts
+        boolean isActive
+        date expiresAt
+        date createdAt
+        date updatedAt
+        array clickHistory
+    }
+```
+
+## Quick Start
 
 ### Prerequisites
 - Node.js 18+
@@ -62,7 +93,7 @@ npm run dev
 docker-compose up --build
 ```
 
-## 📝 Environment Variables
+## Environment Variables
 
 ```env
 JWT_SECRET=your_secret_key_here
@@ -70,7 +101,7 @@ MONGODB_URI=mongodb://localhost:27017/locknlink
 PORT=5000
 ```
 
-## 🧪 Testing
+## Testing
 
 ```bash
 # Backend tests
@@ -86,7 +117,7 @@ npm run test:e2e
 k6 run load-test/url-shortening-load.js
 ```
 
-## 📚 API Documentation
+## API Documentation
 
 Interactive API documentation available at `/api-docs` when running the server.
 
@@ -97,7 +128,7 @@ Interactive API documentation available at `/api-docs` when running the server.
 - `GET /api/urls` - Get user's URLs
 - `GET /:shortUrl` - Redirect to original URL
 
-## 🏗 Project Structure
+## Project Structure
 
 ```
 ├── backend/          # Node.js/Express API
@@ -109,7 +140,7 @@ Interactive API documentation available at `/api-docs` when running the server.
 └── .github/         # CI/CD workflows
 ```
 
-## 🔒 Security
+## Security
 
 - JWT authentication
 - Password hashing (bcrypt)
@@ -117,21 +148,19 @@ Interactive API documentation available at `/api-docs` when running the server.
 - Automated security scanning (Trivy, CodeQL)
 - Dependabot updates
 
-## 🤝 Contributing
+## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
-## 📄 License
+## License
 
 MIT License - see [LICENSE](LICENSE) file.
 
-## 📞 Support
+## Support
 
 - **Issues**: [GitHub Issues](https://github.com/SWETANKSINHA23/locknlink_main/issues)
 - **Documentation**: [Full Docs](./ARCHITECTURE.md)
 
 ---
 
-**Made with ❤️ by Swetank**
-
-⭐ Star this repo if you find it helpful!
+**Made with by Swetank**
