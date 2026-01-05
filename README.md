@@ -511,55 +511,19 @@ PORT=5001
 
 **Solution**: Implemented a retry mechanism with collision detection. The system generates a random alphanumeric string, queries the database for existence, and regenerates if a collision is detected. Added a unique index on the shortUrl field in MongoDB to enforce database-level uniqueness. For high-volume scenarios, the algorithm uses a configurable length parameter to adjust the keyspace size, balancing URL brevity with collision probability.
 
-### Challenge 2: JWT Token Security and Refresh Strategy
-
-**Problem**: Balancing security with user experience in token-based authentication. Long-lived tokens pose security risks if compromised, while short-lived tokens require frequent re-authentication.
-
-**Solution**: Implemented JWT tokens with reasonable expiration times and secure storage practices. Tokens are stored in browser local storage with httpOnly considerations for production deployment. The system validates token expiration on each request and returns appropriate 401 responses for expired tokens. Future enhancement includes refresh token rotation for extended sessions without compromising security.
-
-### Challenge 3: Password-Protected URL Performance
-
-**Problem**: Bcrypt password hashing is computationally expensive, potentially creating performance bottlenecks when validating passwords for high-traffic protected URLs.
-
-**Solution**: Optimized bcrypt salt rounds to balance security and performance. Implemented caching strategies for frequently accessed protected URLs. Added rate limiting specifically for password validation attempts to prevent brute-force attacks while maintaining acceptable response times for legitimate users. Considered implementing a time-based lockout mechanism after multiple failed attempts.
-
-### Challenge 4: Database Connection Management in Containerized Environment
+### Challenge 2: Database Connection Management in Containerized Environment
 
 **Problem**: MongoDB connection timing issues in Docker Compose where the backend service would start before MongoDB was ready to accept connections, causing application crashes.
 
 **Solution**: Implemented health checks in Docker Compose configuration with service dependencies. The MongoDB container includes a health check that verifies database readiness. The backend service uses `depends_on` with `condition: service_healthy` to ensure MongoDB is fully operational before starting. Added connection retry logic in the backend with exponential backoff to handle transient connection failures gracefully.
 
-### Challenge 5: Frontend-Backend Communication in Docker
+### Challenge 3: Frontend-Backend Communication in Docker
 
 **Problem**: CORS issues and network routing complexities when running frontend and backend in separate containers. Direct localhost references from the browser failed in containerized environments.
 
 **Solution**: Configured Nginx in the frontend container to proxy API requests to the backend service using Docker network DNS resolution. The nginx.conf includes proxy_pass directives that route `/api` requests to the backend container by service name. This approach eliminates CORS issues and provides a unified origin for the application. Environment-specific API base URLs are configured through build-time variables.
 
-### Challenge 6: Test Database Isolation
-
-**Problem**: Running tests against a shared MongoDB instance caused test interference and data pollution. Parallel test execution resulted in race conditions and flaky tests.
-
-**Solution**: Integrated MongoDB Memory Server for unit and integration tests. Each test suite spawns an isolated in-memory MongoDB instance that is torn down after test completion. This approach provides complete test isolation, eliminates external dependencies, and significantly improves test execution speed. The Jest configuration includes setup and teardown scripts that manage the memory server lifecycle.
-
-### Challenge 7: CI/CD Pipeline Optimization
-
-**Problem**: GitHub Actions workflows were slow and consumed excessive runner minutes due to redundant dependency installations and Docker layer rebuilding.
-
-**Solution**: Implemented aggressive caching strategies in CI workflows. Node modules are cached using actions/cache with hash-based invalidation. Docker layers are cached using docker/build-push-action with layer caching enabled. Separated workflows for backend, frontend, and E2E tests to enable parallel execution and fail-fast behavior. Only run relevant tests based on changed files using path filters.
-
-### Challenge 8: Monitoring and Observability
-
-**Problem**: Lack of visibility into production application behavior, making it difficult to diagnose performance issues and track usage patterns.
-
-**Solution**: Integrated Prometheus metrics collection with custom application metrics. The backend exposes a `/metrics` endpoint that reports HTTP request durations, error rates, URL creation counts, and database query performance. Grafana dashboards visualize these metrics with alerting rules for critical thresholds. Health check endpoints provide liveness and readiness probes for Kubernetes orchestration.
-
-### Challenge 9: Scalability and Load Handling
-
-**Problem**: Single-instance deployment limited throughput and created a single point of failure. Database connection pooling was not optimized for concurrent requests.
-
-**Solution**: Designed the application to be stateless, enabling horizontal scaling through Kubernetes deployments. Configured Mongoose connection pooling with appropriate pool size limits. Implemented Kubernetes Horizontal Pod Autoscaler to automatically scale backend replicas based on CPU utilization. Added load testing with k6 to establish performance baselines and identify bottlenecks before production deployment.
-
-### Challenge 10: Security Vulnerability Management
+### Challenge 4: Security Vulnerability Management
 
 **Problem**: Keeping dependencies updated and addressing security vulnerabilities in a timely manner across multiple packages.
 
