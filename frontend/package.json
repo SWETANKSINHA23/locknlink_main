@@ -18,7 +18,7 @@
     "url": "https://github.com/SWETANKSINHA23/locknlink_main.git"
   },
   "dependencies": {
-    "@types/qrcode": "^1.5.5",
+    "@types/qrcode": "^1.5.6",
     "dotenv": "^17.1.0",
     "qrcode": "^1.5.4",
     "react": "^19.1.0",
