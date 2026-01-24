@@ -14,18 +14,21 @@ The application follows a three-tier architecture pattern with clear separation 
 
 **Client Layer**: Web browser interface providing user interaction through a React-based single-page application.
 
-**Application Layer**: 
+**Application Layer**:
+
 - Frontend service running React 18 with TypeScript, built using Vite and served through Nginx
 - Backend API service built with Node.js and Express, handling business logic and authentication
 - JWT-based authentication middleware for secure user sessions
 - RESTful API design with comprehensive Swagger documentation
 
 **Data Layer**:
+
 - MongoDB database for persistent storage of users and URL mappings
 - Mongoose ODM for schema validation and data modeling
 - Indexed collections for optimized query performance
 
 **Infrastructure**:
+
 - Docker containerization for all services
 - Docker Compose orchestration for local development
 - Kubernetes manifests for production deployment
@@ -41,7 +44,7 @@ The application uses MongoDB as its primary database with two main collections: 
 ```mermaid
 erDiagram
     User ||--o{ URL : creates
-    
+
     User {
         ObjectId _id PK "Primary Key - Auto-generated"
         string email UK "Unique, lowercase, trimmed"
@@ -49,7 +52,7 @@ erDiagram
         timestamp createdAt "Auto-generated on creation"
         timestamp updatedAt "Auto-updated on modification"
     }
-    
+
     URL {
         ObjectId _id PK "Primary Key - Auto-generated"
         string originalUrl "Required - Full URL to redirect to"
@@ -68,6 +71,7 @@ erDiagram
 **Schema Details:**
 
 **User Collection**
+
 - Primary identifier using MongoDB ObjectId
 - Email field enforced as unique with database index
 - Passwords hashed using bcrypt with salt rounds before storage
@@ -75,6 +79,7 @@ erDiagram
 - Email validation ensures lowercase and trimmed values
 
 **URL Collection**
+
 - Primary identifier using MongoDB ObjectId
 - Short URL enforced as unique with database index for fast lookups
 - Foreign key relationship to User collection via userId
@@ -85,11 +90,13 @@ erDiagram
 - Automatic timestamp tracking for creation and updates
 
 **Indexes:**
+
 - User.email: Unique index for authentication lookups
 - URL.shortUrl: Unique index for redirect performance
 - URL.userId: Non-unique index for user URL queries
 
 **Relationships:**
+
 - One User can create many URLs (one-to-many)
 - Each URL belongs to exactly one User
 - Cascade behavior: URLs remain if User is deleted (configurable)
@@ -113,6 +120,7 @@ erDiagram
 ## Technology Stack
 
 **Frontend**
+
 - React 18.x
 - TypeScript 5.x
 - Vite 7.x for build tooling
@@ -122,6 +130,7 @@ erDiagram
 - Nginx for production serving
 
 **Backend**
+
 - Node.js 18.x
 - Express 4.x
 - MongoDB with Mongoose ODM
@@ -133,6 +142,7 @@ erDiagram
 - Supertest for API testing
 
 **DevOps and Infrastructure**
+
 - Docker and Docker Compose
 - Kubernetes with StatefulSets and Deployments
 - GitHub Actions for CI/CD
@@ -143,7 +153,6 @@ erDiagram
 - Trivy for container security scanning
 - Husky for Git hooks
 - Prettier and ESLint for code quality
-- Commitlint for conventional commits
 
 ## Project Structure
 
@@ -182,10 +191,8 @@ locknlink/
 │       ├── frontend-ci.yml    # Frontend testing and building
 │       └── e2e-tests.yml      # End-to-end test automation
 ├── docker-compose.yml         # Local development orchestration
-├── docker-compose.monitoring.yml  # Monitoring stack
-├── ARCHITECTURE.md            # Detailed architecture documentation
-├── DEPLOYMENT.md              # Production deployment guide
-└── CONTRIBUTING.md            # Contribution guidelines
+└── docker-compose.monitoring.yml  # Monitoring stack
+
 ```
 
 ## Installation & Setup
@@ -233,11 +240,7 @@ npm run install-deps
 
 **Step 3: Configure Environment Variables**
 
-Create a `.env` file in the root directory:
-
-```bash
-cp .env.example .env
-```
+Create a `.env` file in the root directory and populate it with the required variables.
 
 Edit the `.env` file with your configuration:
 
@@ -365,10 +368,12 @@ docker-compose down -v
 The application provides a RESTful API for programmatic access. Refer to the Swagger documentation at `/api-docs` for detailed endpoint information.
 
 **Authentication Endpoints:**
+
 - `POST /api/auth/register` - Register a new user account
 - `POST /api/auth/login` - Authenticate and receive JWT token
 
 **URL Management Endpoints:**
+
 - `POST /api/shorten` - Create a new shortened URL (requires authentication)
 - `GET /api/urls` - Retrieve all URLs for authenticated user
 - `GET /api/urls/:id` - Get specific URL details
@@ -376,6 +381,7 @@ The application provides a RESTful API for programmatic access. Refer to the Swa
 - `PATCH /api/urls/:id` - Update URL properties
 
 **Redirect Endpoint:**
+
 - `GET /:shortUrl` - Redirect to original URL and track analytics
 
 ## Detailed Features
@@ -421,6 +427,7 @@ The codebase includes comprehensive test coverage across multiple levels. Backen
 ### Required Variables
 
 **JWT_SECRET**
+
 - Description: Secret key used for signing and verifying JSON Web Tokens
 - Type: String
 - Example: `your_super_secret_jwt_key_change_this_in_production`
@@ -428,6 +435,7 @@ The codebase includes comprehensive test coverage across multiple levels. Backen
 - Usage: Used by jsonwebtoken library for token generation and validation
 
 **MONGODB_URI**
+
 - Description: MongoDB connection string for database access
 - Type: String (MongoDB URI format)
 - Example (Local): `mongodb://localhost:27017/locknlink`
@@ -436,6 +444,7 @@ The codebase includes comprehensive test coverage across multiple levels. Backen
 - Usage: Mongoose uses this to establish database connection
 
 **PORT**
+
 - Description: Port number on which the backend server listens
 - Type: Number
 - Default: `5000`
@@ -445,6 +454,7 @@ The codebase includes comprehensive test coverage across multiple levels. Backen
 ### Optional Variables
 
 **NODE_ENV**
+
 - Description: Specifies the runtime environment
 - Type: String
 - Values: `development`, `production`, `test`
@@ -452,6 +462,7 @@ The codebase includes comprehensive test coverage across multiple levels. Backen
 - Usage: Affects logging verbosity, error handling, and optimization
 
 **CORS_ORIGIN**
+
 - Description: Allowed origins for Cross-Origin Resource Sharing
 - Type: String or Array
 - Example: `https://yourdomain.com`
@@ -459,11 +470,13 @@ The codebase includes comprehensive test coverage across multiple levels. Backen
 - Usage: CORS middleware configuration
 
 **MONGO_INITDB_ROOT_USERNAME**
+
 - Description: MongoDB root username for authentication
 - Type: String
 - Usage: Docker MongoDB container initialization
 
 **MONGO_INITDB_ROOT_PASSWORD**
+
 - Description: MongoDB root password for authentication
 - Type: String
 - Usage: Docker MongoDB container initialization
@@ -471,6 +484,7 @@ The codebase includes comprehensive test coverage across multiple levels. Backen
 ### Environment-Specific Configuration
 
 **Development Environment:**
+
 ```env
 NODE_ENV=development
 JWT_SECRET=dev_secret_key_not_for_production
@@ -479,6 +493,7 @@ PORT=5000
 ```
 
 **Production Environment:**
+
 ```env
 NODE_ENV=production
 JWT_SECRET=<strong-random-secret-minimum-32-characters>
@@ -488,6 +503,7 @@ CORS_ORIGIN=https://yourdomain.com
 ```
 
 **Docker Environment:**
+
 ```env
 NODE_ENV=production
 JWT_SECRET=<strong-random-secret>
@@ -496,6 +512,7 @@ PORT=5000
 ```
 
 **Testing Environment:**
+
 ```env
 NODE_ENV=test
 JWT_SECRET=test_secret_key
